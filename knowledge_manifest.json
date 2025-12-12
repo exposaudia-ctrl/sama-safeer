@@ -1,0 +1,68 @@
+{
+  "project": {
+    "name": "SAMA Safeer",
+    "language": ["ar", "en"],
+    "priority": "official_sources_first",
+    "strict_policy": true
+  },
+
+  "answer_policy": {
+    "do_not_summarize": true,
+    "do_not_rephrase_official_text": true,
+    "remove_only_noise": [
+      "شارك",
+      "🔗",
+      "📷",
+      "emoji",
+      "زائد إعلاني"
+    ],
+    "preserve": [
+      "أسماء الجامعات",
+      "أسماء التخصصات",
+      "الشروط المرقمة",
+      "التحذيرات",
+      "النصوص النظامية"
+    ]
+  },
+
+  "knowledge_sources": {
+    "tier_1_local_files": [
+      {
+        "id": "main_safeer_file",
+        "type": "docx",
+        "description": "الملف الرئيسي لموقع سفير وخدماته وبرنامج خادم الحرمين الشريفين للابتعاث",
+        "trust_level": "highest"
+      }
+    ],
+
+    "tier_2_government_websites": [
+      {
+        "name": "وزارة التعليم",
+        "url": "https://www.moe.gov.sa",
+        "trust_level": "official"
+      },
+      {
+        "name": "منصة سفير",
+        "url": "https://safeer.moe.gov.sa",
+        "trust_level": "official"
+      },
+      {
+        "name": "برنامج خادم الحرمين الشريفين",
+        "url": "https://scholarship.moe.gov.sa",
+        "trust_level": "official"
+      }
+    ],
+
+    "tier_3_ai_fallback": {
+      "allowed": true,
+      "condition": "only_if_no_official_answer",
+      "must_disclose": true
+    }
+  },
+
+  "response_format": {
+    "include_sources": true,
+    "source_order_label": true,
+    "warning_if_not_official": true
+  }
+}
