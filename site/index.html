@@ -1,11 +1,744 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <title>SAMA Safeer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>SAMA Safeer — سما سفير</title>
+  <meta name="description" content="منصة ثنائية اللغة (عربي/English) لتمكين المستخدم من الوصول للمعلومات الرسمية الموثوقة، مع مساعد ذكي وإحالات مباشرة للمصادر الحكومية." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="SAMA Safeer — سما سفير" />
+  <meta property="og:description" content="موقع ثنائي اللغة مع روابط رسمية ومساعد ذكي." />
+  <meta property="og:type" content="website" />
+
+  <style>
+    :root{
+      /* Brand tokens */
+      --bg: #0b0f16;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --border: rgba(255,255,255,.14);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --accent: #40E0D0; /* turquoise */
+      --accent2: #7C3AED; /* violet */
+      --good: #22c55e;
+      --warn: #f59e0b;
+
+      --radius: 16px;
+      --radius2: 22px;
+      --max: 1120px;
+      --gap: 16px;
+
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans Arabic", "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f8fb;
+        --panel: rgba(0,0,0,.04);
+        --panel2: rgba(0,0,0,.07);
+        --text: rgba(0,0,0,.90);
+        --muted: rgba(0,0,0,.62);
+        --border: rgba(0,0,0,.12);
+        --shadow: 0 10px 30px rgba(0,0,0,.12);
+      }
+    }
+
+    [data-theme="dark"]{
+      --bg:#0b0f16; --panel: rgba(255,255,255,.06); --panel2: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92); --muted: rgba(255,255,255,.70); --border: rgba(255,255,255,.14);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    [data-theme="light"]{
+      --bg:#f7f8fb; --panel: rgba(0,0,0,.04); --panel2: rgba(0,0,0,.07);
+      --text: rgba(0,0,0,.90); --muted: rgba(0,0,0,.62); --border: rgba(0,0,0,.12);
+      --shadow: 0 10px 30px rgba(0,0,0,.12);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: var(--font);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 20% -10%, rgba(64,224,208,.22), transparent 60%),
+        radial-gradient(1100px 700px at 90% 10%, rgba(124,58,237,.22), transparent 55%),
+        radial-gradient(900px 700px at 50% 110%, rgba(64,224,208,.14), transparent 55%),
+        var(--bg);
+      line-height:1.55;
+    }
+
+    a{ color: inherit; }
+    .wrap{ max-width: var(--max); margin: 0 auto; padding: 18px; }
+
+    /* Top bar */
+    .top{
+      position: sticky; top:0; z-index: 50;
+      backdrop-filter: blur(10px);
+      background: color-mix(in oklab, var(--bg) 70%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .top .row{
+      display:flex; align-items:center; justify-content:space-between; gap: 12px;
+      padding: 12px 18px;
+      max-width: var(--max); margin:0 auto;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; text-decoration:none;
+      font-weight: 800; letter-spacing:.2px;
+    }
+    .logo{
+      width:38px; height:38px; border-radius: 12px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), transparent 55%),
+        linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: var(--shadow);
+    }
+    .brand small{ display:block; font-weight: 600; color: var(--muted); margin-top:2px; }
+
+    .actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+    .btn{
+      appearance:none; border:1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      display:inline-flex; gap:8px; align-items:center;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+    }
+    .btn:hover{ background: var(--panel2); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      border-color: color-mix(in oklab, var(--accent) 55%, var(--border));
+      background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 60%, transparent), color-mix(in oklab, var(--accent2) 45%, transparent));
+    }
+    .kbd{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-bottom-width: 2px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: color-mix(in oklab, var(--panel) 80%, transparent);
+    }
+
+    /* Hero */
+    .hero{ padding: 18px 0 10px; }
+    .heroGrid{
+      display:grid; gap: var(--gap);
+      grid-template-columns: 1.4fr .9fr;
+      align-items: stretch;
+    }
+    @media (max-width: 920px){ .heroGrid{ grid-template-columns: 1fr; } }
+
+    .card{
+      border: 1px solid var(--border);
+      border-radius: var(--radius2);
+      background: color-mix(in oklab, var(--panel) 80%, transparent);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .pad{ padding: 18px; }
+
+    .headline{
+      margin:0;
+      font-size: clamp(24px, 4vw, 38px);
+      line-height: 1.12;
+      letter-spacing: .2px;
+    }
+    .sub{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    /* Search */
+    .searchRow{
+      display:flex; gap: 10px; margin-top: 14px; flex-wrap:wrap;
+    }
+    .field{
+      flex: 1 1 320px;
+      display:flex; gap:10px; align-items:center;
+      border:1px solid var(--border);
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 10px 12px;
+    }
+    .field input{
+      width:100%;
+      border:none; outline:none;
+      background: transparent;
+      color: var(--text);
+      font-size: 15px;
+    }
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 13px;
+      cursor:pointer;
+    }
+
+    /* Sections */
+    .grid2{
+      display:grid; gap: var(--gap);
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 920px){ .grid2{ grid-template-columns: 1fr; } }
+
+    .h2{ margin:0 0 10px; font-size: 18px; letter-spacing:.2px; }
+    .muted{ color: var(--muted); margin:0; }
+
+    .list{ margin: 10px 0 0; padding:0; list-style:none; display:grid; gap: 10px; }
+    .item{
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: var(--radius);
+      padding: 12px;
+      display:flex; justify-content:space-between; align-items:flex-start; gap: 12px;
+    }
+    .item a{ text-decoration:none; }
+    .tag{
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      white-space:nowrap;
+    }
+
+    /* Chat */
+    .chat{
+      display:flex; flex-direction:column; gap: 10px;
+      min-height: 340px;
+    }
+    .chatLog{
+      flex:1;
+      border:1px solid var(--border);
+      background: var(--panel);
+      border-radius: var(--radius2);
+      padding: 12px;
+      overflow:auto;
+      scroll-behavior:smooth;
+    }
+    .msg{
+      display:flex; gap:10px; margin: 10px 0;
+      align-items:flex-start;
+    }
+    .bubble{
+      max-width: 760px;
+      border: 1px solid var(--border);
+      background: color-mix(in oklab, var(--panel2) 85%, transparent);
+      border-radius: 16px;
+      padding: 10px 12px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .me .bubble{
+      background: linear-gradient(135deg,
+        color-mix(in oklab, var(--accent) 22%, var(--panel)),
+        color-mix(in oklab, var(--accent2) 16%, var(--panel)));
+    }
+    .avatar{
+      width:34px; height:34px; border-radius: 12px;
+      border: 1px solid var(--border);
+      display:grid; place-items:center;
+      background: color-mix(in oklab, var(--panel) 70%, transparent);
+      flex: 0 0 auto;
+    }
+    .chatBar{
+      display:flex; gap: 10px; align-items:center; flex-wrap:wrap;
+      border:1px solid var(--border);
+      background: var(--panel);
+      border-radius: var(--radius2);
+      padding: 10px;
+    }
+    .chatBar textarea{
+      flex:1 1 320px;
+      min-height: 44px;
+      max-height: 140px;
+      resize: vertical;
+      border:none; outline:none;
+      background: transparent;
+      color: var(--text);
+      font-size: 15px;
+      font-family: var(--font);
+      padding: 6px 8px;
+    }
+
+    /* Footer */
+    footer{ padding: 18px 0 40px; color: var(--muted); }
+    .small{ font-size: 12px; line-height:1.6; }
+
+    /* Accessibility helpers */
+    .sr-only{
+      position:absolute !important;
+      width:1px; height:1px;
+      padding:0; margin:-1px; overflow:hidden;
+      clip: rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+    :focus-visible{
+      outline: 3px solid color-mix(in oklab, var(--accent) 70%, white);
+      outline-offset: 2px;
+      border-radius: 12px;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>مبادرة سما – سفير</h1>
-  <p>جارٍ البناء…</p>
+  <header class="top" role="banner">
+    <div class="row">
+      <a class="brand" href="#top" aria-label="SAMA Safeer Home">
+        <span class="logo" aria-hidden="true"></span>
+        <span>
+          <span id="brandTitle">SAMA Safeer</span>
+          <small id="brandSub">Official-first • ثنائي اللغة</small>
+        </span>
+      </a>
+
+      <div class="actions">
+        <button class="btn" id="btnLang" type="button" aria-label="Toggle language">
+          🌐 <span id="langLabel">AR</span>
+        </button>
+        <button class="btn" id="btnTheme" type="button" aria-label="Toggle theme">
+          🌓 <span id="themeLabel">Auto</span>
+        </button>
+        <a class="btn primary" href="#chat" id="ctaChat">💬 <span id="ctaChatText">اسأل المساعد</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="heroGrid">
+        <div class="card">
+          <div class="pad">
+            <h1 class="headline" id="heroTitle">مبادرة سما — سفير</h1>
+            <p class="sub" id="heroSub">
+              منصة تُركّز على المصادر الرسمية أولًا، مع بحث ذكي وروابط موثوقة، وتجربة استخدام راقية وبسيطة.
+            </p>
+
+            <div class="searchRow" aria-label="Search">
+              <div class="field" role="search">
+                <span aria-hidden="true">🔎</span>
+                <label class="sr-only" for="q">Search</label>
+                <input id="q" placeholder="اكتب سؤالك هنا… (مثال: شروط الابتعاث / سفير / جامعات)" autocomplete="off" />
+              </div>
+              <button class="btn primary" id="btnAsk" type="button">
+                ✨ <span id="askLabel">اسأل</span> <span class="kbd">Enter</span>
+              </button>
+              <button class="btn" id="btnClear" type="button">🧹 <span id="clearLabel">مسح</span></button>
+            </div>
+
+            <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="pill" type="button" data-suggest="Scholarship program FAQ MOE">
+                ⭐ <span id="pill1">أسئلة شائعة (رسمي)</span>
+              </button>
+              <button class="pill" type="button" data-suggest="Safeer scholarship steps and requirements">
+                🧭 <span id="pill2">خطوات السفارة/سفير</span>
+              </button>
+              <button class="pill" type="button" data-suggest="Saudi scholarships 2025 2026 official statistics">
+                📊 <span id="pill3">إحصاءات رسمية</span>
+              </button>
+              <button class="pill" type="button" data-suggest="Visa and study abroad official requirements Saudi">
+                🧾 <span id="pill4">متطلبات عامة</span>
+              </button>
+            </div>
+
+            <p class="muted" style="margin-top:12px" id="heroNote">
+              ملاحظة: المساعد هنا سيُرجع لك إجابة + روابط مرجعية. (سنفعّل ذلك عبر Back-end بعد خطوة الكود التالية)
+            </p>
+          </div>
+        </div>
+
+        <aside class="card">
+          <div class="pad">
+            <h2 class="h2" id="quickTitle">وصول سريع</h2>
+            <p class="muted" id="quickSub">روابط أساسية (غيّرها حسب احتياجك)</p>
+            <ul class="list" id="officialLinks">
+              <li class="item">
+                <div>
+                  <a href="https://sites.moe.gov.sa/scholarship-program/" target="_blank" rel="noopener noreferrer">
+                    <strong id="l1t">برنامج الابتعاث — وزارة التعليم</strong>
+                  </a>
+                  <div class="muted" id="l1d">الصفحات الرسمية + الأسئلة الشائعة</div>
+                </div>
+                <span class="tag" id="tagOfficial1">Official</span>
+              </li>
+              <li class="item">
+                <div>
+                  <a href="https://www.stats.gov.sa/" target="_blank" rel="noopener noreferrer">
+                    <strong id="l2t">الهيئة العامة للإحصاء</strong>
+                  </a>
+                  <div class="muted" id="l2d">بيانات وإحصاءات رسمية</div>
+                </div>
+                <span class="tag" id="tagOfficial2">Official</span>
+              </li>
+              <li class="item">
+                <div>
+                  <a href="https://www.my.gov.sa/" target="_blank" rel="noopener noreferrer">
+                    <strong id="l3t">بوابة my.gov.sa</strong>
+                  </a>
+                  <div class="muted" id="l3d">خدمات حكومية موحّدة</div>
+                </div>
+                <span class="tag" id="tagOfficial3">Official</span>
+              </li>
+            </ul>
+
+            <div style="margin-top:12px">
+              <p class="muted small" id="privacyNote">
+                الخصوصية: لا تضع أي بيانات حساسة داخل الرسائل. سنضيف سياسة خصوصية واضحة لاحقًا.
+              </p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="grid2" aria-label="Features" style="margin-top: var(--gap);">
+      <div class="card">
+        <div class="pad">
+          <h2 class="h2" id="feat1t">مبدأ “Official-First”</h2>
+          <p class="muted" id="feat1d">
+            الهدف: نتائج قابلة للتوثيق بروابط حكومية/رسمية قبل أي شيء.
+          </p>
+          <ul class="list">
+            <li class="item"><span id="f11">🔗 إجابة + روابط مصادر</span><span class="tag" id="f11t">Trust</span></li>
+            <li class="item"><span id="f12">🧠 تلخيص واضح بدون حشو</span><span class="tag" id="f12t">Clarity</span></li>
+            <li class="item"><span id="f13">🧭 تحويل السؤال إلى “مسار خطوات”</span><span class="tag" id="f13t">Action</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="pad">
+          <h2 class="h2" id="feat2t">تجربة مستخدم راقية</h2>
+          <p class="muted" id="feat2d">
+            تصميم نظيف، سرعة، وإتاحة (Accessibility) + دعم عربي/إنجليزي.
+          </p>
+          <ul class="list">
+            <li class="item"><span id="f21">⚡ أداء سريع (Core Web Vitals)</span><span class="tag" id="f21t">Speed</span></li>
+            <li class="item"><span id="f22">♿ معايير WCAG</span><span class="tag" id="f22t">A11y</span></li>
+            <li class="item"><span id="f23">🌗 وضع ليلي/نهاري</span><span class="tag" id="f23t">Theme</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAT -->
+    <section id="chat" style="margin-top: var(--gap);" aria-label="Chat assistant">
+      <div class="card">
+        <div class="pad chat">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+            <div>
+              <h2 class="h2" id="chatTitle">المساعد الذكي</h2>
+              <p class="muted" id="chatSub">
+                اكتب سؤالك… وسيتم إرسال الطلب إلى الـBack-end (Netlify Function) وإرجاع إجابة + روابط.
+              </p>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <button class="btn" id="btnDemo" type="button">🧪 <span id="demoLabel">تجربة سريعة</span></button>
+              <button class="btn" id="btnResetChat" type="button">🗑️ <span id="resetLabel">مسح المحادثة</span></button>
+            </div>
+          </div>
+
+          <div class="chatLog" id="chatLog" aria-live="polite" aria-busy="false"></div>
+
+          <div class="chatBar">
+            <label class="sr-only" for="msg">Message</label>
+            <textarea id="msg" placeholder="اكتب سؤالك هنا… ثم اضغط إرسال" aria-label="Chat message"></textarea>
+            <button class="btn primary" id="btnSend" type="button">📨 <span id="sendLabel">إرسال</span></button>
+          </div>
+
+          <p class="muted small" id="chatHint">
+            إذا ظهر خطأ “Backend not configured”، هذا طبيعي — سنضيف ملف Function في الخطوة التالية.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="card">
+        <div class="pad">
+          <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+            <div>
+              <strong id="footBrand">SAMA Safeer</strong>
+              <div class="small" id="footLine">نسخة أولية — سيتم تطويرها خطوة بخطوة (UI + Backend + مصادر رسمية).</div>
+            </div>
+            <div class="small" id="footMeta">
+              <span>Build: <span id="buildInfo" class="kbd">static</span></span>
+            </div>
+          </div>
+
+          <hr style="border:none; border-top:1px solid var(--border); margin: 14px 0;" />
+
+          <div class="small" id="refsNote">
+            مراجع تصميم/إتاحة/نشر (لتحسين التجربة والأداء): Apple HIG, WCAG, web.dev, Netlify Docs.
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // ---------- State ----------
+    const state = {
+      lang: "ar",
+      theme: "auto", // auto | light | dark
+      chat: []
+    };
+
+    const el = (id) => document.getElementById(id);
+
+    // ---------- i18n ----------
+    const i18n = {
+      ar: {
+        dir: "rtl", lang:"ar",
+        brandTitle:"SAMA Safeer",
+        brandSub:"Official-first • ثنائي اللغة",
+        ctaChatText:"اسأل المساعد",
+        heroTitle:"مبادرة سما — سفير",
+        heroSub:"منصة تُركّز على المصادر الرسمية أولًا، مع بحث ذكي وروابط موثوقة، وتجربة استخدام راقية وبسيطة.",
+        askLabel:"اسأل", clearLabel:"مسح",
+        pill1:"أسئلة شائعة (رسمي)", pill2:"خطوات السفارة/سفير", pill3:"إحصاءات رسمية", pill4:"متطلبات عامة",
+        heroNote:"ملاحظة: المساعد هنا سيُرجع لك إجابة + روابط مرجعية. (سنفعّل ذلك عبر Back-end بعد خطوة الكود التالية)",
+        quickTitle:"وصول سريع", quickSub:"روابط أساسية (غيّرها حسب احتياجك)",
+        l1t:"برنامج الابتعاث — وزارة التعليم", l1d:"الصفحات الرسمية + الأسئلة الشائعة",
+        l2t:"الهيئة العامة للإحصاء", l2d:"بيانات وإحصاءات رسمية",
+        l3t:"بوابة my.gov.sa", l3d:"خدمات حكومية موحّدة",
+        privacyNote:"الخصوصية: لا تضع أي بيانات حساسة داخل الرسائل. سنضيف سياسة خصوصية واضحة لاحقًا.",
+        feat1t:"مبدأ “Official-First”", feat1d:"الهدف: نتائج قابلة للتوثيق بروابط حكومية/رسمية قبل أي شيء.",
+        f11:"🔗 إجابة + روابط مصادر", f12:"🧠 تلخيص واضح بدون حشو", f13:"🧭 تحويل السؤال إلى “مسار خطوات”",
+        feat2t:"تجربة مستخدم راقية", feat2d:"تصميم نظيف، سرعة، وإتاحة (Accessibility) + دعم عربي/إنجليزي.",
+        f21:"⚡ أداء سريع (Core Web Vitals)", f22:"♿ معايير WCAG", f23:"🌗 وضع ليلي/نهاري",
+        chatTitle:"المساعد الذكي",
+        chatSub:"اكتب سؤالك… وسيتم إرسال الطلب إلى الـBack-end (Netlify Function) وإرجاع إجابة + روابط.",
+        demoLabel:"تجربة سريعة", resetLabel:"مسح المحادثة", sendLabel:"إرسال",
+        chatHint:"إذا ظهر خطأ “Backend not configured”، هذا طبيعي — سنضيف ملف Function في الخطوة التالية.",
+        footLine:"نسخة أولية — سيتم تطويرها خطوة بخطوة (UI + Backend + مصادر رسمية).",
+        refsNote:"مراجع تصميم/إتاحة/نشر (لتحسين التجربة والأداء): Apple HIG, WCAG, web.dev, Netlify Docs."
+      },
+      en: {
+        dir: "ltr", lang:"en",
+        brandTitle:"SAMA Safeer",
+        brandSub:"Official-first • Bilingual",
+        ctaChatText:"Ask the assistant",
+        heroTitle:"SAMA Safeer Initiative",
+        heroSub:"A bilingual official-first platform with trusted links, clean UX, and an AI assistant for guided answers.",
+        askLabel:"Ask", clearLabel:"Clear",
+        pill1:"Official FAQs", pill2:"Safeer steps", pill3:"Official stats", pill4:"General requirements",
+        heroNote:"Note: The assistant will return an answer + reference links (enabled after the backend step).",
+        quickTitle:"Quick access", quickSub:"Core official links (customize as needed)",
+        l1t:"Scholarship Program — MOE", l1d:"Official pages + FAQs",
+        l2t:"General Authority for Statistics", l2d:"Official data & statistics",
+        l3t:"my.gov.sa Portal", l3d:"Unified government services",
+        privacyNote:"Privacy: avoid sensitive personal data. A clear policy will be added later.",
+        feat1t:"Official-First principle", feat1d:"Goal: verifiable answers with official references before anything else.",
+        f11:"🔗 Answer + sources", f12:"🧠 Clear summaries", f13:"🧭 Step-by-step guidance",
+        feat2t:"Premium user experience", feat2d:"Clean design, performance, accessibility + Arabic/English support.",
+        f21:"⚡ Fast performance (Core Web Vitals)", f22:"♿ WCAG accessibility", f23:"🌗 Light/Dark mode",
+        chatTitle:"AI Assistant",
+        chatSub:"Type your question… it will be sent to the backend (Netlify Function) and return an answer + links.",
+        demoLabel:"Quick demo", resetLabel:"Clear chat", sendLabel:"Send",
+        chatHint:"If you see “Backend not configured”, that’s expected — we’ll add the Function next.",
+        footLine:"Early build — we’ll iterate (UI + Backend + official sources).",
+        refsNote:"Design/Accessibility/Deploy references: Apple HIG, WCAG, web.dev, Netlify Docs."
+      }
+    };
+
+    function applyLang(lang){
+      state.lang = lang;
+      const t = i18n[lang];
+      document.documentElement.lang = t.lang;
+      document.documentElement.dir = t.dir;
+
+      const ids = [
+        "brandTitle","brandSub","ctaChatText","heroTitle","heroSub",
+        "askLabel","clearLabel","pill1","pill2","pill3","pill4",
+        "heroNote","quickTitle","quickSub","l1t","l1d","l2t","l2d","l3t","l3d",
+        "privacyNote","feat1t","feat1d","f11","f12","f13","feat2t","feat2d","f21","f22","f23",
+        "chatTitle","chatSub","demoLabel","resetLabel","sendLabel","chatHint",
+        "footLine","refsNote"
+      ];
+      ids.forEach(id => { if(el(id)) el(id).textContent = t[id]; });
+
+      // input placeholders
+      el("q").placeholder = (lang==="ar")
+        ? "اكتب سؤالك هنا… (مثال: شروط الابتعاث / سفير / جامعات)"
+        : "Type your question… (e.g., scholarship steps / requirements)";
+      el("msg").placeholder = (lang==="ar")
+        ? "اكتب سؤالك هنا… ثم اضغط إرسال"
+        : "Type your question… then press Send";
+      el("langLabel").textContent = (lang==="ar") ? "AR" : "EN";
+    }
+
+    // ---------- Theme ----------
+    function applyTheme(mode){
+      state.theme = mode;
+      const root = document.documentElement;
+      if(mode==="auto"){
+        root.removeAttribute("data-theme");
+        el("themeLabel").textContent = "Auto";
+      } else {
+        root.setAttribute("data-theme", mode);
+        el("themeLabel").textContent = mode[0].toUpperCase() + mode.slice(1);
+      }
+      localStorage.setItem("sama_theme", mode);
+    }
+
+    // ---------- Chat helpers ----------
+    function addMessage(role, content){
+      state.chat.push({ role, content, ts: Date.now() });
+      renderChat();
+    }
+
+    function escapeHtml(str){
+      return str.replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+    }
+
+    function renderChat(){
+      const log = el("chatLog");
+      log.innerHTML = state.chat.map(m => {
+        const isMe = m.role === "user";
+        const cls = isMe ? "msg me" : "msg";
+        const av = isMe ? "🙂" : "🤖";
+        return `
+          <div class="${cls}">
+            <div class="avatar" aria-hidden="true">${av}</div>
+            <div class="bubble">${escapeHtml(m.content)}</div>
+          </div>
+        `;
+      }).join("") || `
+        <div class="msg">
+          <div class="avatar" aria-hidden="true">🤖</div>
+          <div class="bubble">${state.lang==="ar"
+            ? "جاهز. اكتب سؤالك، وسأرجع لك إجابة وروابط مصادر (بعد تفعيل الـBackend)."
+            : "Ready. Ask a question and I’ll return an answer with source links (after the backend is enabled)."
+          }</div>
+        </div>
+      `;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    async function callBackend(question){
+      // Netlify Functions endpoint:
+      // /.netlify/functions/chat
+      const res = await fetch("/.netlify/functions/chat", {
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify({ question, lang: state.lang })
+      });
+
+      if(!res.ok){
+        const txt = await res.text().catch(()=> "");
+        throw new Error("Backend not configured or error: " + res.status + " " + txt);
+      }
+      return res.json();
+    }
+
+    async function sendQuestion(q){
+      const question = (q ?? el("msg").value ?? "").trim();
+      if(!question) return;
+
+      el("chatLog").setAttribute("aria-busy","true");
+      addMessage("user", question);
+      el("msg").value = "";
+
+      try{
+        const data = await callBackend(question);
+        // Expect: { answer: "...", sources: [{title,url}] }
+        let reply = data.answer || "(no answer)";
+        if(Array.isArray(data.sources) && data.sources.length){
+          reply += "\n\n— مصادر:\n" + data.sources
+            .slice(0,6)
+            .map((s,i)=> `${i+1}) ${s.title} — ${s.url}`)
+            .join("\n");
+        }
+        addMessage("assistant", reply);
+      }catch(err){
+        addMessage("assistant", (state.lang==="ar")
+          ? "⚠️ لم يتم تفعيل الـBackend بعد أو حدث خطأ.\n\nالحل: أضف Netlify Function باسم chat (سأعطيك الكود في الخطوة التالية).\n\nتفاصيل: " + err.message
+          : "⚠️ Backend not enabled yet or an error occurred.\n\nFix: add a Netlify Function named chat (next step).\n\nDetails: " + err.message
+        );
+      }finally{
+        el("chatLog").setAttribute("aria-busy","false");
+      }
+    }
+
+    // ---------- Wire UI ----------
+    function init(){
+      // persisted theme
+      const savedTheme = localStorage.getItem("sama_theme") || "auto";
+      applyTheme(savedTheme);
+
+      // default lang
+      applyLang("ar");
+      renderChat();
+
+      el("btnLang").addEventListener("click", () => {
+        applyLang(state.lang === "ar" ? "en" : "ar");
+        renderChat();
+      });
+
+      el("btnTheme").addEventListener("click", () => {
+        const next = state.theme === "auto" ? "dark" : (state.theme === "dark" ? "light" : "auto");
+        applyTheme(next);
+      });
+
+      el("btnSend").addEventListener("click", () => sendQuestion());
+      el("btnAsk").addEventListener("click", () => {
+        const q = el("q").value.trim();
+        if(q){ el("msg").value = q; sendQuestion(q); }
+      });
+
+      el("q").addEventListener("keydown", (e) => {
+        if(e.key === "Enter"){
+          e.preventDefault();
+          el("btnAsk").click();
+        }
+      });
+
+      el("btnClear").addEventListener("click", () => { el("q").value = ""; el("q").focus(); });
+
+      document.querySelectorAll("[data-suggest]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          el("q").value = btn.getAttribute("data-suggest");
+          el("q").focus();
+        });
+      });
+
+      el("btnResetChat").addEventListener("click", () => {
+        state.chat = [];
+        renderChat();
+      });
+
+      el("btnDemo").addEventListener("click", () => {
+        const demo = (state.lang==="ar")
+          ? "أبغى رابط الصفحة الرسمية للأسئلة الشائعة لبرنامج الابتعاث + تلخيص 5 نقاط"
+          : "Give me the official scholarship program FAQ page + summarize 5 key points";
+        el("msg").value = demo;
+        sendQuestion(demo);
+      });
+
+      el("buildInfo").textContent = "static + netlify-functions";
+    }
+
+    init();
+  </script>
 </body>
 </html>
